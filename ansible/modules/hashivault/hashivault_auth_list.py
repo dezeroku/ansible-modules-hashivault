@@ -26,8 +26,8 @@ EXAMPLES = '''
 
 def main():
     argspec = hashivault_argspec()
-    module = hashivault_init(argspec)
-    result = hashivault_auth_list(module.params)
+    module = hashivault_init(argspec, supports_check_mode=True)
+    result = hashivault_auth_list(module.params, check_mode=module.check_mode)
     if result.get('failed'):
         module.fail_json(**result)
     else:
@@ -35,7 +35,7 @@ def main():
 
 
 @hashiwrapper
-def hashivault_auth_list(params):
+def hashivault_auth_list(params, check_mode=False):
     client = hashivault_auth_client(params)
     result = client.sys.list_auth_methods()
     if isinstance(result, dict):
